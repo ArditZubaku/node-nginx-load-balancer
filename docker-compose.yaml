@@ -10,6 +10,10 @@ services:
     env_file: .env
     deploy:
       replicas: 6
+      resources:
+        limits:
+          memory: 256M
+          cpus: "0.5"
     volumes:
       - my_node_volume:/server/node_modules
 
@@ -18,8 +22,13 @@ services:
     image: my_nginx_instance
     container_name: ${NGINX_CONTAINER_NAME}
     env_file: .env
+    deploy:
+      resources:
+        limits:
+          memory: 128M
+          cpus: "0.25"
     build:
-      context: server
+      context: reverse-proxy
       dockerfile: Dockerfile
     # No ports exposed on the server side, everything will go through nginx
     ports:
