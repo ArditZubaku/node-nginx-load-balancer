@@ -1,0 +1,31 @@
+name: ${PROJECT_NAME}
+
+services:
+  server:
+    pull_policy: build
+    image: my_node_instance
+    build:
+      context: server
+      dockerfile: Dockerfile
+    env_file: .env
+    deploy:
+      replicas: 6
+    volumes:
+      - my_node_volume:/server/node_modules
+
+  reverse-proxy:
+    pull_policy: build
+    image: my_nginx_instance
+    container_name: ${NGINX_CONTAINER_NAME}
+    env_file: .env
+    build:
+      context: server
+      dockerfile: Dockerfile
+    # No ports exposed on the server side, everything will go through nginx
+    ports:
+      - ${NGINX_PORT}:${NGINX_PORT}
+    depends_on:
+      - server
+
+volumes:
+  my_node_volume:
