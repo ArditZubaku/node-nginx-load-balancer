@@ -1,4 +1,4 @@
-FROM node:alpine
+FROM platformatic/node-caged:25-slim
 
 WORKDIR /server
 
